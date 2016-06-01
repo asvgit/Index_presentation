@@ -1,0 +1,557 @@
+<!doctype html>
+<html lang="en">
+
+	<head>
+		<meta charset="utf-8">
+
+		<title>Term Indexing</title>
+
+		<meta name="description" content="A presentation for conference. ASV">
+		<meta name="author" content="Saveliy Arlyapov">
+
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+
+		<link rel="stylesheet" href="css/reveal.css">
+		<link rel="stylesheet" href="css/theme/white.css" id="theme">
+
+		<!-- Code syntax highlighting -->
+		<link rel="stylesheet" href="lib/css/zenburn.css">
+
+		<!-- Printing and PDF exports -->
+		<script>
+			var link = document.createElement( 'link' );
+			link.rel = 'stylesheet';
+			link.type = 'text/css';
+			link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
+			document.getElementsByTagName( 'head' )[0].appendChild( link );
+		</script>
+          <style>
+           .letter {
+            color: greenyellow; /* Цвет символа */
+           } 
+           .comment {
+            color: gold; /* Цвет символа */
+           } 
+           .asv1 {
+            width: 40%;     
+          }
+           .asv {
+            background: rgb(63,63,63);
+            color:aliceblue;
+           }
+          </style>
+
+		<!--[if lt IE 9]>
+		<script src="lib/js/html5shiv.js"></script>
+		<![endif]-->
+	</head>
+
+	<body>
+
+		<div class="reveal">
+
+			<!-- Any section element inside of this container is displayed as a slide -->
+			<div class="slides">
+				<section>
+                    <h4>Разработка модулей индексирования термов в системе автоматического доказательства теорем prisnif.</h4>
+					<p>
+                        <strong><small>Арляпов С.B., Черкашин Е.А., Ларионов А.А.</small></strong>
+					</p>
+				</section>
+
+				<section>
+					<h3>Применение индексирования</h3>
+					<ul>
+						<li>Локическое прораммирование</li>
+						<li>Функциональное программирование</li>
+                        <li><strong>Автоматическое доказательство теорем</strong></li>
+					</ul>
+				</section>
+
+				<section>
+					<h3>Применение АДТ</h3>
+					<ul>
+						<li>Системы планиования действий</li>
+						<li>Системах поддержки принятия решений</li>
+                        <li>Экспертных системах</li>
+					</ul>
+				</section>
+
+				<section>
+					<h3>Полезность индексирования<br><strong>(Vampire)</strong></h3>
+					<p>
+						Теорема LCL-129-1.p<br>  Через 270 секунд порождает 8 272 207 дизъюнктов. Из них 5 203 928 не включаются. Из остатка (3 068 279) остаются 8 053 обобщенных (gen).
+                        <br>
+                        <strong>Пространство поиска сократилось в 1000 раз.</strong>
+					</p>
+				</section>
+
+				<section>
+					<h3>Цели и задачи</h3>
+                    <ol><strong>Цели:</strong>
+						<li>Исследовать предметную область</li>
+						<li>Разработать программный продукт</li>
+					</ol>
+                    <ol><strong>Задачи:</strong>
+						<li>Исследовать повышение<br> эффективности</li>
+						<li>Выделить набор функций</li>
+						<li>Реализовать программный продукт</li>
+						<li>Провести сравнение результатов</li>
+					</ol>
+				</section>
+
+				<section>
+					<h4>Общий вид ПО-формулы</h4>
+                    <img  data-src="pictures/f1.png" alt="по-формула">                    
+					<!--<p>
+						где, 
+					</p>-->
+					<table>
+						<tbody>
+							<tr>
+                                <td>где Q - это квантор, <br>X - множество переменных, <br>А - набор атамарных формул, <br>F<i><sub>i</sub></i> - произвольная формула.</td>
+							</tr>
+						</tbody>
+					</table>
+				</section>
+
+				<section>
+					<h3>Сравнение с языком Prolog</h3>
+                    <img  data-src="pictures/f2.png" alt="по-формула">      
+					<table >
+						<tbody>
+							<tr>
+                                <td> 
+					<pre back><div class="asv" ><span class="letter">in</span>(a,b).
+<span class="letter">in</span>(b,c).
+<span class="letter">it</span>(X,Y):-<span class="letter">in</span>(X,Z),<span class="letter">in</span>(Z,Y).
+
+?-<span class="letter">it</span>(a,X).					</div></pre>
+                                </td>
+							</tr>
+						</tbody>
+					</table> 
+				</section>
+
+				<section>
+					<h3>Фильтрация</h3>
+					<table>
+						<tbody>
+							<tr>
+                                <td><b>Дано</b> <br>L - множество термов<br>R(l,t) - отношение<br>t - терм запрос <br><b>Необходимо найти</b><br>M={l : l ∈ L, R(l,t)}</td>
+                                <td><b>Примеры R</b> <br>inst(l,t) ⇔ ∃𝜎 l=t𝜎;<br>gen(l,t) ⇔ ∃𝜎 l𝜎=t;</td>
+							</tr>
+						</tbody>
+					</table>
+				</section>
+
+				<section>
+					<h3>Операции над структурами индекса</h3>
+					<table>
+						<tbody>
+							<tr>
+                                <td><b>Поддержка</b><ol><li>Создание: L, R</li><li>Использование: задан t, получить M</li><li>Обновление: L</li></ol></td>
+                                <td><b>Поиск</b><ol><li>Поиск вопросов для базы (gen)</li><li>Поиск атомов в базе для ответа на вопрос (inst)</li></ol></td>
+							</tr>
+						</tbody>
+					</table>
+				</section>
+
+				<section>
+					<h3>Два типа индекса</h3> 
+                    
+					<pre back style="width=40%"><div class="asv">                    
+                    <span class="comment">//Origin</span>
+                    <span class="letter">f</span>(<span class="letter">g</span>(a,b),c,k,<span class="letter">g</span>(<span class="letter">l</span>(e,m),d)) 
+                    
+                    <span class="comment">//Path String</span>
+                    <span class="letter">f</span>.1.<span class="letter">g</span>.1.a
+                    <span class="letter">f</span>.1.<span class="letter">g</span>.2.b
+                    <span class="letter">f</span>.2.c
+                    <span class="letter">f</span>.3.k
+                    <span class="letter">f</span>.4.<span class="letter">g</span>.1.<span class="letter">l</span>.1.e
+                    <span class="letter">f</span>.4.<span class="letter">g</span>.1.<span class="letter">l</span>.2.m
+                    <span class="letter">f</span>.4.<span class="letter">g</span>.2.d 
+                    
+                    <span class="comment">//Discrimination tree</span>
+                    <span class="letter">f</span>.<span class="letter">g</span>.a.b.c.k.<span class="letter">g</span>.<span class="letter">l</span>.e.m.d
+                    </div></pre>
+				</section>
+
+				<section>
+					<h3>Path String</h3>
+                    Для терма <i>f(g(a,b),c,k,g(l(e,m),d))</i> индекс имеет вид:<img  data-src="pictures/1.png" alt="f(g(a,b),c,k,g(l(e,m),d))">
+				</section>
+
+				<section>
+					<h3>Представление набора термов</h3>
+					<table >
+						<tbody>
+							<tr>
+                                <td><img width="65%"  data-src="pictures/2.png"><small><b>База</b>:f(g(a,b),c);f(g(b,c),a);f(g(a,d),d).</small></td>
+                                <td><img width="50%" data-src="pictures/5.png"><small><b>Терм-запрос:</b>f(g(a,*),*)<b>Inst:</b>f(g(a,b),c);f(g(a,d),d).</small></td>
+							</tr>
+							<tr>
+                                <td><img width="65%" data-src="pictures/3.png"><small>Добавление f(g(b,c),c).</small></td>
+                                <td><img width="50%" data-src="pictures/4.png"><br><small>Удаление <b>третьего</b> терма.</small></td>
+							</tr>
+						</tbody>
+					</table>                    
+				</section>
+
+				<section>
+					<h3>Представление набора термов</h3>
+					<table >
+						<tbody>
+							<tr>
+                                <td style="vertical-align: top">База:<br><ol><li>f(g(a,b),c);</li><li>f(g(b,c),a);</li><li>f(g(a,d),d).</li></ol></td>
+                                <td><img  data-src="pictures/2.png"></td>
+							</tr>
+						</tbody>
+					</table>                    
+				</section>
+
+				<section>
+					<h3>Добавление</h3>
+					<table >
+						<tbody>
+							<tr>
+                                <td style="vertical-align: top"><b>База:</b><br><ol><li>f(g(a,b),c);</li><li>f(g(b,c),a);</li><li>f(g(a,d),d).</li></ol><br><br>Добавление f(g(b,c),c).</td>
+                                <td><img  data-src="pictures/3.png"></td>
+							</tr>
+						</tbody>
+					</table>                    
+				</section>                
+
+				<section>
+					<h3>Удаление</h3>
+					<table >
+						<tbody>
+							<tr>
+                                <td style="vertical-align: top"><b>База:</b><br><ol><li>f(g(a,b),c);</li><li>f(g(b,c),a);</li><li>f(g(a,d),d).</li></ol><br><br>Удаление<br><b>третьего</b> терма.</td>
+                                <td><img  data-src="pictures/4.png"></td>
+							</tr>
+						</tbody>
+					</table>                    
+				</section>
+
+				<section>
+					<h3>Instantiation</h3>
+					<table >
+						<tbody>
+							<tr>
+                                <td style="vertical-align: top"><b>База:</b><br><ol><li>f(g(a,b),c);</li><li>f(g(b,c),a);</li><li>f(g(a,d),d).</li></ol><br><b>Терм-запрос:</b><br>f(g(a,*),*)<br><b>Inst:</b><br><ul><li>f(g(a,b),c);</li><li>f(g(a,d),d).</li></ul></td>
+                                <td><img  data-src="pictures/5.png"></td>
+							</tr>
+						</tbody>
+					</table>                    
+				</section>
+
+				<section>
+					<h3>Discrimination Tree</h3>
+					<table >
+						<tbody>
+							<tr>
+                                <td style="vertical-align: top">Для терма <br><i>f(g(a,b),c,k,g(l(e,m),d))</i> <br>индекс имеет вид:</td>
+                                <td><img  data-src="pictures/6.png" alt="f(g(a,b),c,k,g(l(e,m),d))"></td>
+							</tr>
+						</tbody>
+					</table> 
+				</section>
+
+				<section>
+					<h3>Представление набора термов</h3>
+					<table >
+						<tbody>
+							<tr>
+                                <td style="vertical-align: top">База:<br><ol><li>f(g(a,b),c);</li><li>f(g(b,c),a);</li><li>f(g(a,d),d).</li></ol></td>
+                                <td><img  data-src="pictures/7.png"></td>
+							</tr>
+						</tbody>
+					</table>                    
+				</section>
+
+				<section>
+					<h3>Добавление</h3>
+					<table >
+						<tbody>
+							<tr>
+                                <td style="vertical-align: top"><b>База:</b><br><ol><li>f(g(a,b),c);</li><li>f(g(b,c),a);</li><li>f(g(a,d),d).</li></ol><br><br>Добавление f(g(b,c),c).</td>
+                                <td><img  data-src="pictures/8.png"></td>
+							</tr>
+						</tbody>
+					</table>                    
+				</section>                
+
+				<section>
+					<h3>Удаление</h3>
+					<table >
+						<tbody>
+							<tr>
+                                <td style="vertical-align: top"><b>База:</b><br><ol><li>f(g(a,b),c);</li><li>f(g(b,c),a);</li><li>f(g(a,d),d).</li></ol><br><br>Удаление<br><b>третьего</b> терма.</td>
+                                <td><img  data-src="pictures/9.png"></td>
+							</tr>
+						</tbody>
+					</table>                    
+				</section>
+
+				<section>
+					<h3>Instantiation</h3>
+					<table >
+						<tbody>
+							<tr>
+                                <td style="vertical-align: top"><b>База:</b><br><ol><li>f(g(a,b),c);</li><li>f(g(b,c),a);</li><li>f(g(a,d),d).</li></ol><br><b>Терм-запрос:</b><br>f(g(a,*),*)<br><b>Inst:</b><br><ul><li>f(g(a,b),c);</li><li>f(g(a,d),d).</li></ul></td>
+                                <td><img  data-src="pictures/10.png"></td>
+							</tr>
+						</tbody>
+					</table>                    
+				</section>  
+                
+				<section>
+                    <section>
+                        <h4>Демонстрация результатов полученных в среде MATLAB</h4>
+                    </section>
+					<section>      <!--data-background-video="movie/mov1.mp4"-->                  
+                        <video height="%80" controls="controls" poster="video/duel.jpg">
+                           <source src="movie/mov1.mp4" type='video/ogg; codecs="theora, vorbis"'>
+                            Тег video не поддерживается вашим браузером. 
+                            <a href="movie/mov1.mp4">Скачайте видео</a>.
+                        </video>
+					</section>
+				</section>
+
+				<section>
+					<h3>Реализация</h3>
+					<table >
+						<tbody>
+							<tr>
+                                <td style="vertical-align: top">Язык программирования: <b>Rust</b>.<br>Среда разработки: <b>Visual Studio Code</b>.<br>Дополнительно: <b>Cargo</b>, <b>RustC</b>, <b>Gnome Terminal</b>.</td>
+							</tr>
+						</tbody>
+					</table> 
+				</section>
+
+				<section>
+                    <h4>Реализация структуры</h4>
+                    <h3>Index</h3>
+                    <pre back><code class="rust" data-trim contenteditable>pub struct Index { 
+    pub next: Vec&lt;Index&gt;, 
+    pub node_ind: usize,
+    pub pointer: String,
+    pub data: Vec&lt;usize&gt;,
+    pub num_type : bool
+}
+</code></pre> 
+                    <h4>Реализация структуры</h4>
+                    <h3>Base</h3>
+                    <pre back><code class="rust" data-trim contenteditable>pub struct Base {
+    pub main_ind: Index,
+    pub n_terms: usize
+}
+</code></pre> 
+				</section>
+
+				<section>
+                    <h4>Перечень типажей</h4>
+<pre back><code class="rust" data-trim contenteditable>pub fn new()
+pub fn add_term(&amp;mut self,s:&amp;String)
+pub fn del_term(&amp;mut self,i:&amp;usize)
+pub fn to_string(&amp;self)->String</code></pre> 
+                    <h4>Перечень функций</h4>
+                    <pre back><code class="rust" data-trim contenteditable>
+pub fn inst(base:&amp;Index,quest:&amp;Index)->Vec&lt;usize&gt;
+pub fn inst(base:&amp;Index,quest:&amp;Index)->Vec&lt;usize&gt;</code></pre> 
+				</section>
+         
+				<section>  
+                    <h4>PString</h4>  
+<pre back><code class="initHighlightingOnLoad" data-trim contenteditable>   
+f(g(a,b),c)
+f(g(a,c),c)
+root_
+	f
+		1
+			g
+				1
+					a {1 2}
+				2
+					b {1}
+					c {2}
+		2
+			c {1 2}</code></pre> 
+                </section>
+         
+				<section>  
+                    <h4>DTree</h4>  
+<pre back><code class="d" data-trim contenteditable>   
+f(g(a,b),c)
+f(g(a,c),c)
+root_
+	f [2]
+		g [2] 
+			a 
+				b 
+					c 
+				c 
+					c</code></pre> 
+                </section>
+
+                
+<!--/////////////////////////////////////////////////////Part_Org&Ec////////////////////////////////////////////////////////////////////////////// -->
+				<section data-transition="slide" data-background="#4d7e65" data-background-transition="zoom">
+                    <section>
+                        <h2>Организационно экономическая чать</h2>
+                        <p>
+                            Тут будут таблицы с полезностью!
+                        </p>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Параметр</th>
+                                    <th>Value</th>
+                                    <th>Quantity</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Apples</td>
+                                    <td>$1</td>
+                                    <td>7</td>
+                                </tr>
+                                <tr>
+                                    <td>Lemonade</td>
+                                    <td>$2</td>
+                                    <td>18</td>
+                                </tr>
+                                <tr>
+                                    <td>Bread</td>
+                                    <td>$3</td>
+                                    <td>2</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </section>
+                    <section>
+                        <h2>DAdadadaa!</h2>
+                        <p>
+                            Тут будут таблицы с полезностью!
+                        </p>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Item</th>
+                                    <th>Value</th>
+                                    <th>Quantity</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Apples</td>
+                                    <td>$1</td>
+                                    <td>7</td>
+                                </tr>
+                                <tr>
+                                    <td>Lemonade</td>
+                                    <td>$2</td>
+                                    <td>18</td>
+                                </tr>
+                                <tr>
+                                    <td>Bread</td>
+                                    <td>$3</td>
+                                    <td>2</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </section>
+				</section>
+<!--////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// -->
+
+				<section>
+					<h2>Hello There</h2>
+					<p>
+						reveal.js enables you to create beautiful interactive slide decks using HTML. This presentation will show you examples of what it can do.
+					</p>
+				</section>
+
+				<section>
+					<h2>Speaker View</h2>
+					<p>There's a <a href="https://github.com/hakimel/reveal.js#speaker-notes">speaker view</a>. It includes a timer, preview of the upcoming slide as well as your speaker notes.</p>
+					<p>Press the <em>S</em> key to try it out.</p>
+
+					<aside class="notes">
+						Oh hey, these are some notes. They'll be hidden in your presentation, but you can see them if you open the speaker notes window (hit 's' on your keyboard).
+					</aside>
+				</section>
+
+				<section>
+					<h2>Global State</h2>
+					<p>
+						Set <code>data-state="something"</code> on a slide and <code>"something"</code>
+						will be added as a class to the document element when the slide is open. This lets you
+						apply broader style changes, like switching the page background.
+					</p>
+				</section>
+
+				<section>
+					<h2>Take a Moment</h2>
+					<p>
+						Press B or . on your keyboard to pause the presentation. This is helpful when you're on stage and want to take distracting slides off the screen.
+					</p>
+				</section>
+
+				<section>
+					<h2>Much more</h2>
+					<ul>
+						<li>Right-to-left support</li>
+						<li><a href="https://github.com/hakimel/reveal.js#api">Extensive JavaScript API</a></li>
+						<li><a href="https://github.com/hakimel/reveal.js#auto-sliding">Auto-progression</a></li>
+						<li><a href="https://github.com/hakimel/reveal.js#parallax-background">Parallax backgrounds</a></li>
+						<li><a href="https://github.com/hakimel/reveal.js#keyboard-bindings">Custom keyboard bindings</a></li>
+					</ul>
+				</section>
+
+				<section style="text-align: left;">
+					<h1>THE END</h1>
+					<p>
+						- <a href="http://slides.com">Try the online editor</a> <br>
+						- <a href="https://github.com/hakimel/reveal.js">Source code &amp; documentation</a>
+					</p>
+				</section>
+
+			</div>
+
+		</div>
+
+		<script src="lib/js/head.min.js"></script>
+		<script src="js/reveal.js"></script>
+
+		<script>
+
+			// Full list of configuration options available at:
+			// https://github.com/hakimel/reveal.js#configuration
+			Reveal.initialize({
+				controls: true,
+				progress: true,
+				history: true,
+				center: true,
+
+				transition: 'convex', // none/fade/slide/convex/concave/zoom
+
+				// Optional reveal.js plugins
+				dependencies: [
+					{ src: 'lib/js/classList.js', condition: function() { return !document.body.classList; } },
+					{ src: 'plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+					{ src: 'plugin/zoom-js/zoom.js', async: true },
+					{ src: 'plugin/notes/notes.js', async: true }
+				]
+			});
+
+		</script>
+
+	</body>
+</html>
