@@ -22,6 +22,7 @@
 
 		<!-- Printing and PDF exports -->
 		<script>
+            
 			var link = document.createElement( 'link' );
 			link.rel = 'stylesheet';
 			link.type = 'text/css';
@@ -47,6 +48,10 @@
 		<!--[if lt IE 9]>
 		<script src="lib/js/html5shiv.js"></script>
 		<![endif]-->
+        
+	    <!--Круговая анимация статистики -->
+        <link rel="stylesheet" href="css/jquery.circliful.css">
+	    <link rel="stylesheet" href="css/style.css">
 	</head>
 
 	<body>
@@ -55,24 +60,20 @@
 
 			<!-- Any section element inside of this container is displayed as a slide -->
 			<div class="slides">
+                
+                <!-- Титульный лист -->
 				<section>
                     <h4>Разработка модулей индексирования термов в системе автоматического доказательства теорем prisnif</h4>
-					<p>
-                        <strong><small>Арляпов С.B., Черкашин Е.А., Ларионов А.А.</small></strong>
+                    <br>
+					<p style="text-align: left;">
+                        <strong><small>Выполнил: Арляпов С.В.<br>Руководитель: Черкашин Е.А.</small></strong>
 					</p>
+                    <p>
+                        <small><small>Иркутск 2016 г.</small></small>
+                    </p>
 				</section>
-
-				<section style="text-align: left;">
-					<h3>План</h3>
-                    <ol>
-						<li>Актуальность</li>
-						<li>Описание предметной области</li>
-						<li>Исследование предметной области</li>
-						<li>Разработака программного подукта</li>
-						<li>Результаты и выводы</li>
-					</ol>
-				</section>
-
+                
+                <!-- Цели и задачи -->
 				<section>
 					<h3>Цели и задачи</h3>
                     <ol><strong>Цели:</strong>
@@ -87,7 +88,17 @@
 					</ol>
 				</section>
 
-<!--/////////////////////////////////////////////////////Актуальность////////////////////////////////////////////////////////////////////////////// -->
+                <!-- Актуальность -->
+				<section>
+					<h3>Полезность индексирования<br><strong>(Vampire)</strong></h3>
+					<p>
+						Теорема LCL-129-1.p<br>  Через 270 секунд порождает 8 272 207 дизъюнктов. Из них 5 203 928 не включаются. Из остатка (3 068 279) остаются 8 053 обобщенных (gen).
+                        <br>
+                        <strong>Пространство поиска сократилось в 1000 раз.</strong>
+					</p>
+				</section>
+
+                <!-- Применение -->
 				<section>
 					<h2>Применение</h2>
                     <h5>индексирование</h5>
@@ -105,38 +116,27 @@
 					</ul>
 				</section>
 
+                <!-- Про prisnif -->
 				<section>
-					<h3>Архитектура системы</h3>
-                    <h2>prisnif</h2>
-                    <img  data-src="pictures/map.png">    
+                    <h4>prisnif</h4>
+                    <img  data-src="pictures/map.png">     
+                    <p><b>Prisnif</b> - система автоматического доказательства теорем, работающая в исчислении позитивно-образованных формул.<p>
 				</section>
-
-				<section>
-					<h3>Полезность индексирования<br><strong>(Vampire)</strong></h3>
-					<p>
-						Теорема LCL-129-1.p<br>  Через 270 секунд порождает 8 272 207 дизъюнктов. Из них 5 203 928 не включаются. Из остатка (3 068 279) остаются 8 053 обобщенных (gen).
-                        <br>
-                        <strong>Пространство поиска сократилось в 1000 раз.</strong>
-					</p>
-				</section>
-<!--/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// -->
-
-<!--/////////////////////////////////////////////////////Предметная область////////////////////////////////////////////////////////////////////////////// -->
+                
+                <!-- Про ПО-формулы -->
 				<section>
 					<h4>Общий вид ПО-формулы</h4>
-                    <img  data-src="pictures/f1.png" alt="по-формула">                    
-					<!--<p>
-						где, 
-					</p>-->
+                    <img  data-src="pictures/f1.png" alt="по-формула">     
 					<table>
 						<tbody>
 							<tr>
-                                <td>где Q - это квантор, <br>X - множество переменных, <br>А - набор атамарных формул, <br>F<i><sub>i</sub></i> - ПО-формула, с квантором, который отличен от предыдущего квантора.</td>
+                                <td>где Q - это квантор, <br>X - множество переменных, <br>А - набор атамарных формул, <br>F<i><sub>i</sub></i> - ПО-формула с квантором, который отличен от предыдущего квантора.</td>
 							</tr>
 						</tbody>
 					</table>
 				</section>
 
+                <!-- Индкесирование ПО-формулы -->
 				<section>
 					<h3>Сравнение с языком Prolog</h3>
                     <img  data-src="pictures/f2.png" alt="по-формула">      
@@ -155,6 +155,7 @@
 					</table> 
 				</section>
 
+                <!-- Постановка задачи индексирования -->
 				<section>
 					<h3>Фильтрация</h3>
 					<table>
@@ -167,6 +168,7 @@
 					</table>
 				</section>
 
+                <!-- Техническая поддержка индексирования -->
 				<section>
 					<h3>Операции над структурами индекса</h3>
 					<table>
@@ -178,10 +180,8 @@
 						</tbody>
 					</table>
 				</section>
-<!--///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// -->
 
-
-<!--/////////////////////////////////////////////////////PS&DT////////////////////////////////////////////////////////////////////////////// -->
+                <!-- Подходы -->
 				<section>
 					<h4>методы индексирования</h4> 
                     
@@ -189,7 +189,7 @@
                     <span class="comment">//Origin</span>
                     <span class="letter">f</span>(<span class="letter">g</span>(a,b),c,k,<span class="letter">g</span>(<span class="letter">l</span>(e,m),d)) 
                     
-                    <span class="comment">//Path String</span>
+                    <span class="comment">//Path Indexing</span>
                     <span class="letter">f</span>.1.<span class="letter">g</span>.1.a
                     <span class="letter">f</span>.1.<span class="letter">g</span>.2.b
                     <span class="letter">f</span>.2.c
@@ -203,58 +203,33 @@
                     </div></pre>
 				</section>
 
+                <!-- Построение/Inst -->
 				<section>
-					<h3>Path String</h3>
-                    <p>
-                    Для терма <i>f(g(a,b),c,k,g(l(e,m),d))</i> <br>индекс имеет вид:
-                    </p>
-                    <img  data-src="pictures/1.png" alt="f(g(a,b),c,k,g(l(e,m),d))">
-				</section>
-                
-				<section>
-					<h3>Discrimination Tree</h3>
+					<h3>Техническая поддержка индекса</h3>
 					<table >
 						<tbody>
 							<tr>
-                                <td style="vertical-align: top">Для терма <br><i>f(g(a,b),c,k,g(l(e,m),d))</i> <br>индекс имеет вид:</td>
-                                <td><img  data-src="pictures/6.png" alt="f(g(a,b),c,k,g(l(e,m),d))"></td>
-							</tr>
-						</tbody>
-					</table> 
-				</section>
-
-				<section>
-					<h3>Поддержка Path String</h3>
-					<table >
-						<tbody>
-							<tr>
-                                <td><img width="66%"  data-src="pictures/2.png"><small><b>База</b>:f(g(a,b),c);f(g(b,c),a);f(g(a,d),d).</small></td>
-                                <td><img width="50%" data-src="pictures/5.png"><small><b>Терм-запрос:</b>f(g(a,*),*)&nbsp;<b>Inst:</b>f(g(a,b),c);f(g(a,d),d).</small></td>
-							</tr>
-							<tr>
-                                <td><img width="66%" data-src="pictures/3.png"><small>Добавление f(g(b,c),c).</small></td>
-                                <td><img width="50%" data-src="pictures/4.png"><br><small>Удаление <b>третьего</b> терма.</small></td>
+                                <td><img width="100%"  data-src="pictures/2.png"><small><b>База</b>:f(g(a,b),c);f(g(b,c),a);f(g(a,d),d).</small></td>
+                                <td><img width="71%" data-src="pictures/5.png"><small><b>Терм-запрос:</b>f(g(a,*),*)&nbsp;<b>Inst:</b>f(g(a,b),c);f(g(a,d),d).</small></td>
 							</tr>
 						</tbody>
 					</table>                    
 				</section>
 
+                <!-- Добавление/Удаление -->
 				<section>
-					<h3>Поддержка Discrimination Tree</h3>
+					<h3>Добавление и удаление</h3>
 					<table >
 						<tbody>
 							<tr>
-                                <td><img width="55%"  data-src="pictures/7.png"><small><b>База</b>:f(g(a,b),c);f(g(b,c),a);f(g(a,d),d).</small></td>
-                                <td><img width="41%" data-src="pictures/10.png"><small><b>Терм-запрос:</b>f(g(a,*),*)&nbsp;<b>Inst:</b>f(g(a,b),c);f(g(a,d),d).</small></td>
-							</tr>
-							<tr>
-                                <td><img width="55%" data-src="pictures/8.png"><small>Добавление f(g(b,c),c).</small></td>
-                                <td><img width="41%" data-src="pictures/9.png"><br><small>Удаление <b>третьего</b> терма.</small></td>
+                                <td><img width="70%" data-src="pictures/3.png"><small>Добавление f(g(b,c),c).</small></td>
+                                <td><img width="100%" data-src="pictures/4.png"><br><small>Удаление <b>третьего</b> терма.</small></td>
 							</tr>
 						</tbody>
 					</table>                    
 				</section> 
                 
+                <!-- Демонстрация -->
 				<section>
                     <section>
                         <h4>Демонстрация результатов полученных в среде MATLAB</h4>
@@ -267,52 +242,54 @@
                         </video>
 					</section>
 				</section>
-<!--//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// -->
 
-<!--//////////////////////////////////////////////////////Реализация//////////////////////////////////////////////////////////////////////// -->
+                <!-- Инструментарий -->
 				<section>
 					<h3>Реализация</h3>
 					<table >
 						<tbody>
 							<tr>
-                                <td style="vertical-align: top">Язык программирования: <b>Rust</b>.<br>Среда разработки: <b>Visual Studio Code</b>.<br>Дополнительно: <b>Cargo</b>, <b>RustC</b>, <b>Gnome Terminal</b>.</td>
+                                <td style="vertical-align: top">Язык программирования: <b>Rust</b>.<br>Среда разработки: <b>Visual Studio Code</b>.<br>Система контроля версий: <b>Git.</b><br>Дополнительно: <b>Cargo</b>, <b>RustC</b>, <b>Gnome Terminal</b>.</td>
 							</tr>
 						</tbody>
 					</table> 
 				</section>
 
+                <!-- Структуры -->
 				<section>
-                    <h4>Реализация структуры</h4>
+                    <h4>Реализация структур</h4>
                     <h3>Index</h3>
-                    <pre back><code class="rust" data-trim contenteditable>pub struct Index { 
-    pub next: Vec&lt;Index&gt;, 
+                    <pre back><code class="rust" data-trim contenteditable>pub struct Index&lt;T&gt; { 
+    pub next: Vec&lt;Index&lt;T&gt;&gt;, 
     pub node_ind: usize,
-    pub pointer: String,
+    pub pointer: T,
     pub data: Vec&lt;usize&gt;,
     pub num_type : bool
 }
 </code></pre> 
                     <h4>Реализация структуры</h4>
                     <h3>Base</h3>
-                    <pre back><code class="rust" data-trim contenteditable>pub struct Base {
-    pub main_ind: Index,
+                    <pre back><code class="rust" data-trim contenteditable>pub struct Base&lt;T&gt; {
+    pub main_ind: Index&lt;T&gt;,
     pub n_terms: usize
 }
 </code></pre> 
 				</section>
 
+                <!-- Процедуры -->
 				<section>
                     <h4>Перечень типажей</h4>
-<pre back><code class="rust" data-trim contenteditable>pub fn new()
-pub fn add_term(&amp;mut self,s:&amp;String)
-pub fn del_term(&amp;mut self,i:&amp;usize)
-pub fn to_string(&amp;self)->String</code></pre> 
+<pre back><code class="rust" data-trim contenteditable>pub fn new&lt;T&gt;()->Base&lt;T&gt;;
+pub fn add_term&lt;T&gt;(&amp;mut self,s:&amp;T);
+pub fn del_term&lt;T&gt;(&amp;mut self,i:&amp;usize);
+pub fn to_string(&amp;self)->String.</code></pre> 
                     <h4>Перечень функций</h4>
                     <pre back><code class="rust" data-trim contenteditable>
-pub fn inst(base:&amp;Base,quest:&amp;Index)->Vec&lt;usize&gt;
-pub fn gen(base:&amp;Base,quest:&amp;Index)->Vec&lt;usize&gt;</code></pre> 
+pub fn inst&lt;T&gt;(base:&amp;Base&lt;T&gt;,quest:&amp;Index&lt;T&gt;)->Vec&lt;usize&gt;;
+pub fn gen&lt;T&gt;(base:&amp;Base&lt;T&gt;,quest:&amp;Index&lt;T&gt;)->Vec&lt;usize&gt;.</code></pre> 
 				</section>
          
+                <!-- Тестирование -->
 				<section>  
                     <h4>PString</h4>  
 <pre back><code class="d" data-trim contenteditable>   
@@ -338,6 +315,7 @@ root_
 					c </code></pre> 
                 </section>
                 
+                <!-- Демонстрация реализации -->
 				<section>
                     <section>
                         <h4>Демонстрация реализации</h4>
@@ -350,11 +328,10 @@ root_
                         </video>
 					</section>
 				</section>
-<!--//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// -->
                 
-<!--/////////////////////////////////////////////////////Результаты////////////////////////////////////////////////////////////////////////////// -->
+                <!-- Оценка результатов -->
 				<section>
-                    <h2>Показатели времени</h2>
+                    <h2>Сравнение результатов</h2>
 					<table>
 						<thead>
 							<tr>
@@ -366,51 +343,111 @@ root_
 						<tbody>
 							<tr>
                                 <td>PString</td>
-                                <td align="center">14</td>
-                                <td align="center">179</td>
+                                <td align="center">88,85 &plusmn; 1,55</td>
+                                <td align="center">84,28 &plusmn; 1,78</td>
 							</tr>
 							<tr>
                                 <td>DTree</td>
-                                <td align="center">11</td>
-                                <td align="center">713</td>
+                                <td align="center">92,71 &plusmn; 2,46</td>
+                                <td align="center">86,57 &plusmn; 1,68</td>
 							</tr>
 						</tbody>
 					</table>
 				</section>
                 
+                <!-- Смета -->
 				<section>
-					<h2>Итоги</h2>
-					<ul>
-						<li>Реализовано графическое представление индексирования;</li>
-						<li>Реализованы модули на языке программирования Rust;</li>
-                        <li>Получены характеристики программных продуктов.</li>
-					</ul>
-				</section>
-<!--//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// -->
-                
-				<section>
-					<h2>Заключение</h2>
-					<p>
-						До 12.06.2016 планируется адаптировать библиотеки для АДТ Prisnif, а также реализовать функцию backtracking, которая даст возможность производить откат базы до предыдущего состояния.
-					</p>
+					<h4>Организационно-экономическая часть</h4>
+                    <p>Себестоимость разработки</p>
+					<img  data-src="pictures/estimate.png">
+                    <p><small>Затраты на разработку рассматриваемого проекта составили 55 957 рублей.</small></p>
 				</section>
                 
-				<section style="text-align: left;">
-					<h2>Источники</h2>
-					<p>
-                        - R. Sekar, I.V.Ramakrishan, A. Voronkov “Term Indexing” в книге “Handbook of Automated Reasoning”, том II.<br>
-                        - А. А. Ларионов, Е. А. Черкашин “Программные технологии для эффективного поиска логического вывода в исчислении позитивно-образованных формул”<br>
-                        - <a href=https://github.com/rust-lang/rust/tree/master/src/doc/book>The Rust Programming Language</a>
-					</p>
-
+                <!-- Оценка результатов -->
+				<section data-state="stats">
+					<h3>Оценка результативности</h3>
+                    
+                        <table>
+                            <tbody>
+                                <tr>
+                                    <td align="center">Научная результативность</td>
+                                    <td align="center">Научно-техническая результативность</td>
+                                </tr>
+                            </tbody>
+                        </table>  
+                    <div style="padding-left: 10%;">
+                        <div class="circle-container">
+                            <div class="circlestat" data-dimension="200" data-text="65%" data-width="30" data-fontsize="38" data-percent="65" data-fgcolor="#00a900" data-bgcolor="#eee" data-fill="#ddd"></div>
+                        </div> 
+                        <div class="circle-container" style="padding-left: 25%;">
+                            <div class="circlestat" data-dimension="200" data-text="72%" data-width="30" data-fontsize="38" data-percent="72" data-fgcolor="#00a900" data-bgcolor="#eee" data-fill="#ddd"></div>
+                        </div>  
+                    </div>
+				</section>
+                
+                <!-- БЖД -->
+				<section>
+					<h4>Эргономические требования к организации рабочего места</h4>
+                    <p style="text-align: left;">Параметры рабочего места</p>
+                    <small>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th colspan="3" align="center" style="border-right: 1px solid #000;">Фактические значения</th>
+                                    <th colspan="3" align="center">Фактические значения</th>
+                                </tr>
+                                <tr>
+                                    <th style="border-right: 1px solid #000;">Высота рабочей поверхности, см</th>
+                                    <th style="border-right: 1px solid #000;">Высота сиденья, см</th>
+                                    <th style="border-right: 1px solid #000;">Пространство для ног, см</th>
+                                    <th style="border-right: 1px solid #000;">Высота рабочей поверхности, см</th>
+                                    <th style="border-right: 1px solid #000;">Высота сиденья, см</th>
+                                    <th>Пространство для ног, см</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td align="center" style="border-right: 1px solid #000;">75</td>
+                                    <td align="center" style="border-right: 1px solid #000;">45</td>
+                                    <td align="center" style="border-right: 1px solid #000;">68</td>
+                                    <td align="center" style="border-right: 1px solid #000;">68-80</td>
+                                    <td align="center" style="border-right: 1px solid #000;">40-50</td>
+                                    <td align="center">> 65</td>
+                                </tr>
+                            </tbody>
+                        </table>       
+                    </small>     
+                    <p style="text-align: left;"><small><small>ГОСТ Р ИСО 13406-1-2007 Эргономические требования к проведению офисных работ с использованием плоскопанельных терминалов</small></small></p>      
+				</section>
+                
+                <!-- Заклчение -->
+				<section>
+					<h3>Заключение</h3>  
+                    <small>
+                        <ol>
+                            <li>Исследована предметная область повышения производительности процесса построения поиска логического вывода;</li>
+                            <li>Выделен набор функций, который необходимо было реализовать:
+                                <ol>
+                                    <li>Добавление;</li>
+                                    <li>Удаление;</li>
+                                    <li>Поиск:
+                                        <ol>
+                                            <li>Instantiation;</li>
+                                            <li>Generalization.</li>
+                                        </ol>
+                                    </li>
+                                </ol>
+                            </li>
+                            <li>При помощи методов Path indexing и Discrimination tree разработаны структуры данных для индексов gen и inst;</li>
+                            <li>Произведена реализация библиотек на языке программирования Rust;</li>
+                            <li>Проведено тестирование и сравнение полученных результатов.</li>
+                        </ol>
+                    </small>
 				</section>
 
+                                <!-- Прощание -->
 				<section style="text-align: left;">
 					<h3>Спасибо за внимание</h3>
-					<p>
-						- <a href=http://asv.irnok.net>Presentation</a> <br>
-						- <a href=https://github.com/asvgit>GitHub Profile</a>
-					</p>
 				</section>
 
 			</div>
@@ -419,9 +456,13 @@ root_
 
 		<script src="lib/js/head.min.js"></script>
 		<script src="js/reveal.js"></script>
+        
+        <!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>-->
+        <script type="text/javascript" src="js/sava.js"></script>
+        <script type="text/javascript" src="js/jquery.circliful.min.js"></script>
 
 		<script>
-
+            var i=0;
 			// Full list of configuration options available at:
 			// https://github.com/hakimel/reveal.js#configuration
 			Reveal.initialize({
@@ -446,6 +487,16 @@ root_
             //My options
             Reveal.configure({ slideNumber: 'h.v' });
 
+			Reveal.addEventListener( 'stats', function( event ) {
+				console.log( 'stats called!' );
+                i+=1;
+                if(i==1){
+                    $('.circlestat').circliful();
+                    Reveal.slide( 20 );
+                }
+                console.log( i );
+                //location.reload(); 
+			} );
 		</script>
 
 	</body>
